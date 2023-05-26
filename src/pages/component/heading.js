@@ -58,14 +58,11 @@ export default function Heading() {
                 </div>
                 <div className={styles.right}>
                     {token && <div className={styles.icon}>
-                        <Link href={"/cart/" + token.id} className={styles.icon}>
+                        <Link href={"/cart/"} className={styles.icon}>
                             <AiOutlineShoppingCart
                                 size={40}
-                                onMouseEnter={() => setCartShowing(true)}
-                                onMouseLeave={() => setCartShowing(false)}
                             />
                         </Link>
-                        {cartShowing && bookInCart.map(book => <div></div>)}
                     </div>}
                     {token ? (
                         <div

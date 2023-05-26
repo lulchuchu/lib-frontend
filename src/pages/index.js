@@ -4,6 +4,7 @@ import Link from "next/link";
 
 import styles from "@/styles/home.module.css";
 import { useRouter } from "next/router";
+import DisplayBook from "@/pages/component/DisplayBook";
 export default function Home({ categoryId, authorId }) {
     const [token, setToken] = useState(null);
     const [books, setBooks] = useState([]);
@@ -66,7 +67,9 @@ export default function Home({ categoryId, authorId }) {
     return (
         <>
             <div className={styles.layout}>
-                <div className={styles.left}></div>
+                <div className={styles.left}>
+                    
+                </div>
                 <div className={styles.main}>
                     <div className={styles.filterBar}></div>
                     <div className={styles.bookLayout}>
@@ -75,37 +78,7 @@ export default function Home({ categoryId, authorId }) {
                                 <div className={styles.bookRow}>
                                     {bookRow.map((book) => {
                                         return (
-                                            <Link
-                                                href={"/book/" + book.id}
-                                                key={book.id}
-                                                className={styles.book}
-                                            >
-                                                <img
-                                                    src={
-                                                        "http://localhost:8080/api/file/getImage?path=" +
-                                                        book.cover
-                                                    }
-                                                    alt={book.id}
-                                                    className={styles.bookCover}
-                                                />
-                                                <div
-                                                    className={styles.bookTitle}
-                                                >
-                                                    {book.title}
-                                                </div>
-                                                <div
-                                                    className={
-                                                        styles.bookAuthor
-                                                    }
-                                                >
-                                                    {book.authorName}
-                                                </div>
-                                                <div
-                                                    className={styles.bookPrice}
-                                                >
-                                                    {book.price} $
-                                                </div>
-                                            </Link>
+                                            <DisplayBook book={book} />
                                         );
                                     })}
                                 </div>
