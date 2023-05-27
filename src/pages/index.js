@@ -5,7 +5,7 @@ import Link from "next/link";
 import styles from "@/styles/home.module.css";
 import { useRouter } from "next/router";
 import DisplayBook from "@/pages/component/DisplayBook";
-export default function Home({ categoryId, authorId }) {
+export default function Home({ categoryId, authorId, keyword }) {
     const [token, setToken] = useState(null);
     const [books, setBooks] = useState([]);
 
@@ -22,7 +22,7 @@ export default function Home({ categoryId, authorId }) {
     useEffect(() => {
         const fetchBook = async () => {
             let result;
-            if (categoryId == null && authorId == null) {
+            if (categoryId == null && authorId == null && keyword == null) {
                 result = await axios.get("http://localhost:8080/api/book/all");
             }
             else if (categoryId != null) {
@@ -44,6 +44,15 @@ export default function Home({ categoryId, authorId }) {
                 );
                 console.log("author", result);
             }
+            else if (keyword != null) {
+                result = await axios.get(
+                    "http://localhost:8080/api/book/search",
+                    {
+                        params: { keyword: keyword },
+                    }
+                );
+                console.log("keyword", result);
+            }
             let tmp = [];
             let rs = [];
             for (const book of result.data) {
@@ -61,7 +70,7 @@ export default function Home({ categoryId, authorId }) {
             setBooks(rs);
         };
         fetchBook();
-    }, []);
+    }, [categoryId, authorId, keyword]);
 
     console.log("books", books);
     return (

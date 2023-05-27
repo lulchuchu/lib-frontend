@@ -23,7 +23,6 @@ export default function Heading() {
         setToken(JSON.parse(localStorage.getItem("token")));
     }, []);
 
-    function handleSearchButton() {}
 
     function handleLogout() {
         localStorage.removeItem("token");
@@ -48,12 +47,21 @@ export default function Heading() {
                     />
                     <button
                         className={styles.searchButton}
-                        onClick={handleSearchButton}
+                        onClick={
+                        () => {
+                            console.log("searchText: " + searchText)
+
+                            router.push("/search?keyword=" + searchText)
+                        }}
+
                     >
-                        <AiOutlineSearch
-                            size={20}
-                            className={styles.searchIcon}
-                        />
+                        {/*<Link href={{pathname: `/search`, query: {keyword: searchText}}}>*/}
+                            <AiOutlineSearch
+                                size={20}
+                                className={styles.searchIcon}
+                            />
+                        {/*</Link>*/}
+
                     </button>
                 </div>
                 <div className={styles.right}>
@@ -74,7 +82,7 @@ export default function Heading() {
                             {optionUserShowing && (
                                 <div className={styles.optionUser}>
                                     <Link
-                                        href={"/bought/" + token.id}
+                                        href={"/bought"}
                                         className={styles.option}
                                     >
                                         <div> My Bought</div>

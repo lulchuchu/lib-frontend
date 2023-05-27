@@ -2,34 +2,45 @@ import {useState} from "react";
 import styles from "@/styles/cart.module.css";
 import Quantity from "@/pages/component/Quantity";
 import {useRouter} from "next/router";
+import axios from "axios";
 
-export default function Item({book}) {
-    const [quantity, setQuantity] = useState(book.quantity);
+export default function Item({token, bill}) {
+    const [quantity, setQuantity] = useState(bill.quantity);
     const router = useRouter();
 
-    function handleCheckout() {
+    async function handleCheckout() {
 
+        const result = await axios.post("http://localhost:8080/api/bill/pay?billId=" + bill.id,{}, {headers: {Authorization: "Bearer " + token.accessToken}})
+        console.log("result", result.data)
+        router.reload();
     }
 
-    function handleDelete() {
+    async function handleDelete() {
+        const result = await axios.post("http://localhost:8080/api/bill/removefromcart",{}, {
+            headers: {Authorization: "Bearer " + token.accessToken},
+            params: {billId: bill.id}
+        })
+
+        console.log("result", result.data)
+        router.reload();
 
     }
 
     return (
 
-        <tr key={book.bookId} className={styles.item}>
-            <td className={styles.info} onClick={() => router.push("/book/" + book.bookId)}>
-                <img src={"http://localhost:8080/api/file/getImage?path=" + book.bookCover}
+        <tr key={bill.bookId} className={styles.item}>
+            <td className={styles.info} onClick={() => router.push("/book/" + bill.bookId)}>
+                <img src={"http://localhost:8080/api/file/getImage?path=" + bill.bookCover}
                      alt=""
                      className={styles.cover}/>
                 <div>
-                    <div className={styles.title}>{book.bookTitle}</div>
-                    <div className={styles.author}>{book.bookAuthor}</div>
+                    <div className={styles.title}>{bill.bookTitle}</div>
+                    <div className={styles.author}>{bill.bookAuthor}</div>
                 </div>
             </td>
-            <td>{book.bookPrice} $</td>
+            <td>{bill.bookPrice} $</td>
             <td><Quantity quan={quantity} change={setQuantity} style={{textAlign: "left"}}/></td>
-            <td>{(book.bookPrice * quantity).toFixed(2)} $</td>
+            <td>{(bill.bookPrice * quantity).toFixed(2)} $</td>
             <td>
                 <button className={styles.button} onClick={handleCheckout}>Checkout</button>
                 <button className={styles.button} onClick={handleDelete}>Delete</button>

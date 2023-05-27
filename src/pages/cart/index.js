@@ -45,12 +45,9 @@ export default function Cart() {
             </thead>
             <tbody>
             {bookInCart.map((book) =>
-
-                <Item book = {book} />
+                <Item token = {token} bill= {book} />
             )}
             </tbody>
         </table>
-
-
     </div>)
 }
