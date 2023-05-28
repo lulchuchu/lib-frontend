@@ -1,15 +1,11 @@
 .layout {
     display: flex;
-}
+    text-align: center;
 
-.left {
-    margin-left: 10%;
 }
 
 .main {
-    margin-left: 10%;
-    margin-right: 10%;
-    width: 50%;
+    margin: 0 auto;
 }
 
 .bookCover {

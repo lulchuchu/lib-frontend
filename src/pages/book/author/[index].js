@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import styles from "@/styles/book.module.css";
 import Home from "@/pages";
+import Heading from "@/pages/component/heading";
 
 export default function AuthorBook() {
 
@@ -12,6 +13,7 @@ export default function AuthorBook() {
 
     return (
         <>
+            <Heading/>
             {index && <Home categoryId={null} authorId={index} />}
         </>
     )

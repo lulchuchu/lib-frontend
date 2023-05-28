@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react";
+import Login from "@/pages/login";
+import styles from "@/styles/login.module.css";
 import Link from "next/link";
-import{ useRouter } from "next/router";
-import Heading from "../component/heading";
-import styles from "@/styles/login.module.css"
+import {useRouter} from "next/router";
 import axios from "axios";
+import {useState} from "react";
+import Heading from "@/pages/component/heading";
 
-export default function Login(){
-
+export default function AdminLogin(){
     const router = useRouter();
     const [data, setData] = useState({
         username: "",
@@ -17,12 +17,13 @@ export default function Login(){
     async function handleLogin(){
         const result = await axios.post("http://localhost:8080/login", data)
         localStorage.setItem("token", JSON.stringify(result.data))
-        router.push("/")
+        router.push("/admin")
         console.log(result)
     }
-    return (
+
+    return(
         <>
-            <Heading />
+            <Heading/>
             <div className={styles.main}>
                 <div className={styles.layoutLogin}>
                     <div className={styles.formLogin}>
@@ -62,14 +63,6 @@ export default function Login(){
                         </div>
                     </div>
                     <button className={styles.button} onClick={handleLogin}>Login</button>
-
-                    <div className={styles.or}>or</div>
-                    
-                    <Link href = "/register">
-                        <button className={styles.button}>New? Register now</button>
-
-                    </Link>
-
                 </div>
             </div>
         </>

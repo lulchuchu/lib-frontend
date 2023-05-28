@@ -3,17 +3,54 @@ import styles from "@/styles/book.module.css";
 import axios from "axios";
 import {useState} from "react";
 import StarRatings from "react-star-ratings";
+import {confirmAlert} from "react-confirm-alert";
+import {useRouter} from "next/router";
 
 export default function BookReview({token, book, rating}) {
     const [review, setReview] = useState("");
+    const router = useRouter();
 
     async function handleSendReview() {
-        const data = {
-            content: review, bookId: index, score: rating,
-        };
+        if(!token) {
+            confirmAlert({
+                title: "You haven't login yet",
+                message: 'You need to login to add book to cart',
+                buttons: [
+                    {
+                        label: 'Go to login page',
+                        onClick: () => {
+                            router.push(("/login"))}
+                    },
+                    {
+                        label: 'Cancel',
+                    }
+                ],
+                closeOnEscape: true,
+                closeOnClickOutside: true,
+            });
+        }
+        else{
+            const data = {
+                content: review, bookId: book.id, score: rating,
+            };
 
-        const result = await axios.post("http://localhost:8080/api/review/add", data, {headers: {Authorization: "Bearer " + token.accessToken}});
-        console.log(result.data);
+            const result = await axios.post("http://localhost:8080/api/review/add", data, {headers: {Authorization: "Bearer " + token.accessToken}});
+            confirmAlert({
+                title: "Review sent",
+                message: 'Your review has been sent',
+                 buttons: [
+                     {
+                         label: 'Ok',
+                         onClick: () => {
+                         router.reload()}
+                     },
+                 ],
+                closeOnEscape: true,
+                closeOnClickOutside: true,
+            });
+            console.log(result.data);
+        }
+
     }
 
     return <div className={styles.block}>

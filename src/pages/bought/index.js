@@ -4,6 +4,7 @@ import Item from "@/pages/cart/Item";
 import Quantity from "@/pages/component/Quantity";
 import axios from "axios";
 import {useRouter} from "next/router";
+import Heading from "@/pages/component/heading";
 
 
 export default function MyBought(){
@@ -41,6 +42,7 @@ export default function MyBought(){
     }
 
     return (<div className={styles.cartLayout}>
+        <Heading />
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
             rel="stylesheet"

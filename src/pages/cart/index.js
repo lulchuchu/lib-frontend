@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import styles from "@/styles/cart.module.css";
 import Item from "@/pages/cart/Item";
+import Heading from "@/pages/component/heading";
 
 export default function Cart() {
 
@@ -27,6 +28,7 @@ export default function Cart() {
     }, [token])
 
     return (<div className={styles.cartLayout}>
+        <Heading/>
         <link
             href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
             rel="stylesheet"

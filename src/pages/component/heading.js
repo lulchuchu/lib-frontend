@@ -11,7 +11,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-export default function Heading() {
+export default function Heading({isAdmin}) {
     const router = useRouter();
     const [token, setToken] = useState(null);
     const [optionUserShowing, setOptionUserShowing] = useState(false);
@@ -65,7 +65,7 @@ export default function Heading() {
                     </button>
                 </div>
                 <div className={styles.right}>
-                    {token && <div className={styles.icon}>
+                    {!isAdmin && token && <div className={styles.icon}>
                         <Link href={"/cart/"} className={styles.icon}>
                             <AiOutlineShoppingCart
                                 size={40}

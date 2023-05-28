@@ -5,9 +5,13 @@ import Link from "next/link";
 import styles from "@/styles/home.module.css";
 import { useRouter } from "next/router";
 import DisplayBook from "@/pages/component/DisplayBook";
+import Heading from "@/pages/component/heading";
 export default function Home({ categoryId, authorId, keyword }) {
     const [token, setToken] = useState(null);
     const [books, setBooks] = useState([]);
+    const [sold, setSold] = useState(false);
+    const [newRelease, setNewRelease] = useState(false);
+    const [price, setPrice] = useState(null);
 
     const router = useRouter();
 
@@ -73,14 +77,31 @@ export default function Home({ categoryId, authorId, keyword }) {
     }, [categoryId, authorId, keyword]);
 
     console.log("books", books);
+
+    function handleBestSellerClick() {
+        setSold(!sold)
+        //write a function to sort books by sold desc
+    }
+
+    function handleNewReleaseCLick() {
+
+    }
+
+    function handlePriceClick() {
+
+    }
+
     return (
         <>
+            <Heading />
+
             <div className={styles.layout}>
-                <div className={styles.left}>
-                    
-                </div>
                 <div className={styles.main}>
-                    <div className={styles.filterBar}></div>
+                    {/*<div className={styles.filterBar}>*/}
+                    {/*    <div className={styles.filterButton} onClick={handleBestSellerClick}>Best seller</div>*/}
+                    {/*    <div className={styles.filterButton} onClick = {handleNewReleaseCLick}>New release</div>*/}
+                    {/*    <div className={styles.filterButton} onClick={handlePriceClick}>Sort by price</div>*/}
+                    {/*</div>*/}
                     <div className={styles.bookLayout}>
                         {books.map((bookRow) => {
                             return (

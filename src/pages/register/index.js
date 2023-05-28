@@ -1,6 +1,7 @@
 import { useState } from "react";
 import styles from "@/styles/register.module.css";import Router, { useRouter } from "next/router";
 import axios from "axios";
+import Heading from "@/pages/component/heading";
 
 
 export default function register(){
@@ -24,6 +25,7 @@ export default function register(){
 
     return (
         <>
+            <Heading />
             <h1 style={{ textAlign: "center" }}>
                 Register
             </h1>

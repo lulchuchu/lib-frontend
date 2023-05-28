@@ -10,6 +10,7 @@ import BookDescription from "@/pages/book/BookDescription";
 import BookAuthor from "@/pages/book/BookAuthor";
 import BookReview from "@/pages/book/BookReview";
 import BookSimilar from "@/pages/book/BookSimilar";
+import Heading from "@/pages/component/heading";
 
 
 
@@ -40,7 +41,7 @@ export default function Book() {
                         params: { bookId: index },
                     }
                 );
-                console.log;
+                console.log(result.data);
                 setBook(result.data);
             };
             fetchBook();
@@ -48,22 +49,23 @@ export default function Book() {
     }, [index]);
 
     return (
-        book && (
-            <div className={styles.bookDetailLayout}>
-                <BookCover token = {token} book={book}  quantity={quantity} changeQuantity = {setQuantity} rating={rating} changeRating={setRating}/>
+        <>
+            <Heading />
+                <div className={styles.bookDetailLayout}>
+                    <BookCover token = {token} book={book}  quantity={quantity} changeQuantity = {setQuantity} rating={rating} changeRating={setRating}/>
 
-                <div className={styles.bookDetail}>
-                    <div className={styles.title}>{book.title}</div>
-                    <div className={styles.author}>{book.author?.name}</div>
-                    <div className={styles.price}>{book.price * quantity}$</div>
-                    <BookDescription book={book}/>
-                    <BookAuthor book={book} imgUrl={img_url}/>
-                    <BookReview token={token} book={book} rating={rating}/>
-                    <BookSimilar book = {book} />
-
-
+                    <div className={styles.bookDetail}>
+                        <div className={styles.title}>{book.title}</div>
+                        <div className={styles.author}>{book.author?.name}</div>
+                        <div className={styles.price}>{book.price * quantity}$</div>
+                        <BookDescription book={book}/>
+                        <BookAuthor book={book} imgUrl={img_url}/>
+                        <BookReview token={token} book={book} rating={rating}/>
+                        <BookSimilar book = {book} />
+                    </div>
                 </div>
-            </div>
-        )
+            )
+
+        </>
     );
 }
