@@ -4,5 +4,58 @@
     border: 1px solid #ccc;
     border-radius: 24px;
     background-color: white;
-    margin-left: 5px
+    margin-left: 5px;
+    margin-bottom: 5px;
+}
+
+.layout{
+    display: flex;
+    text-align: center;
+}
+
+.main{
+    margin: 0 auto;
+    display: flex;
+
+}
+
+.info{
+    text-align: left;
+    margin-right:20px;
+}
+.bookCover{
+    width: 400px;
+    height: 600px;
+}
+.sub{
+    display: flex;
+}
+
+.input{
+    border-radius: 4px;
+    padding: 14px 16px 14px 16px;
+    border: 1px solid #ccc;
+    padding-bottom: 14px;
+    font-size: 16px;
+    width: 320px;
+    margin-right:5px;
+}
+
+.inputDescription{
+    border-radius: 4px;
+    padding: 14px 16px 14px 16px;
+    border: 1px solid #ccc;
+    padding-bottom: 14px;
+    font-size: 16px;
+    width: 640px;
+    height: 300px;
+}
+
+.buttonLst {
+    position: fixed;
+    bottom: 0;
+    text-align: right;
+    left: 50%;
+    transform: translate(-50%, 0);
+    width: 1070px;
 }

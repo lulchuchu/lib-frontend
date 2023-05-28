@@ -4,10 +4,12 @@ import styles from "@/styles/admin.module.css";
 import Heading from "@/pages/component/heading";
 import {confirmAlert} from "react-confirm-alert";
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import {useRouter} from "next/router";
 
 export default function AdminHome() {
     const [token, setToken] = useState(null);
     const [books, setBooks] = useState([]);
+    const router = useRouter();
 
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
@@ -31,24 +33,30 @@ export default function AdminHome() {
 
     console.log("token in admin", token)
 
-    function handleViewClick() {
-
+    function handleViewClick(bookId) {
+        router.push("/admin/book/"+bookId);
     }
 
     async function handleDeleteClick(bookId) {
-        const result = await axios.post("http://localhost:8080/api/book/delete?bookId="+bookId,{},
-            {headers: {Authorization: "Bearer " + token.accessToken}})
-            confirmAlert({
-                title: "Delete book",
-                message: result.data,
-                buttons: [
-                    {
-                        label: 'OK'
-                    },
-                ],
-                closeOnEscape: true,
-                closeOnClickOutside: true,
-            });
+        confirmAlert({
+            title: "Delete book",
+            message: "Are you sure to delete this book?",
+            buttons: [
+                {
+                    label: 'Confirm',
+                    onClick: async () => {
+                        const result = await axios.post("http://localhost:8080/api/book/delete?bookId=" + bookId, {},
+                            {headers: {Authorization: "Bearer " + token.accessToken}})
+                        router.reload();
+                    }
+                },
+                {
+                    label: 'Cancel'
+                }
+            ],
+            closeOnEscape: true,
+            closeOnClickOutside: true,
+        });
     }
 
     return (<>
