@@ -23,7 +23,7 @@ export default function AdminLogin(){
 
     return(
         <>
-            <Heading/>
+            <Heading isAdmin={true}/>
             <div className={styles.main}>
                 <div className={styles.layoutLogin}>
                     <div className={styles.formLogin}>

@@ -10,8 +10,7 @@ export default function Home({ categoryId, authorId, keyword }) {
     const [token, setToken] = useState(null);
     const [books, setBooks] = useState([]);
     const [sold, setSold] = useState(false);
-    const [newRelease, setNewRelease] = useState(false);
-    const [price, setPrice] = useState(null);
+
 
     const router = useRouter();
 
@@ -22,6 +21,24 @@ export default function Home({ categoryId, authorId, keyword }) {
         const token = JSON.parse(localStorage.getItem("token"));
         setToken(token);
     }, []);
+
+    function handleRow(result){
+        let tmp = [];
+        let rs = [];
+        for (const book of result.data) {
+            if (tmp.length == 5) {
+                rs = [...rs, tmp];
+                tmp = [];
+            }
+            tmp = [...tmp, book];
+            console.log("tmp", tmp);
+        }
+        if (tmp.length > 0) {
+            rs = [...rs, tmp];
+        }
+        console.log("rs", rs);
+        setBooks(rs);
+    }
 
     useEffect(() => {
         const fetchBook = async () => {
@@ -57,51 +74,46 @@ export default function Home({ categoryId, authorId, keyword }) {
                 );
                 console.log("keyword", result);
             }
-            let tmp = [];
-            let rs = [];
-            for (const book of result.data) {
-                if (tmp.length == 5) {
-                    rs = [...rs, tmp];
-                    tmp = [];
-                }
-                tmp = [...tmp, book];
-                console.log("tmp", tmp);
-            }
-            if (tmp.length > 0) {
-                rs = [...rs, tmp];
-            }
-            console.log("rs", rs);
-            setBooks(rs);
+            handleRow(result);
         };
         fetchBook();
     }, [categoryId, authorId, keyword]);
 
     console.log("books", books);
 
-    function handleBestSellerClick() {
-        setSold(!sold)
-        //write a function to sort books by sold desc
+    async function handleBestSellerClick() {
+        const result = await axios.get("http://localhost:8080/api/book/all/bestseller");
+        handleRow(result)
     }
 
-    function handleNewReleaseCLick() {
+    async function handleNewReleaseCLick() {
+        const result = await axios.get("http://localhost:8080/api/book/all/new");
+        handleRow(result)
 
     }
 
-    function handlePriceClick() {
+    async function handleIncPriceClick() {
+        const result = await axios.get("http://localhost:8080/api/book/all/priceIncrease");
+        handleRow(result);
+    }
 
+    async function handleDecPriceClick() {
+        const result = await axios.get("http://localhost:8080/api/book/all/priceDecrease");
+        handleRow(result);
     }
 
     return (
         <>
             <Heading />
-
             <div className={styles.layout}>
                 <div className={styles.main}>
-                    {/*<div className={styles.filterBar}>*/}
-                    {/*    <div className={styles.filterButton} onClick={handleBestSellerClick}>Best seller</div>*/}
-                    {/*    <div className={styles.filterButton} onClick = {handleNewReleaseCLick}>New release</div>*/}
-                    {/*    <div className={styles.filterButton} onClick={handlePriceClick}>Sort by price</div>*/}
-                    {/*</div>*/}
+                    <div className={styles.filterBar}>
+                        <button className={styles.filterButton} onClick={() => router.reload()}>All</button>
+                        <button className={styles.filterButton} onClick={handleBestSellerClick}>Best seller</button>
+                        <button className={styles.filterButton} onClick = {handleNewReleaseCLick}>New release</button>
+                        <button className={styles.filterButton} onClick={handleIncPriceClick}>Sort by price increment</button>
+                        <button className={styles.filterButton} onClick={handleDecPriceClick}>Sort by price decrement</button>
+                    </div>
                     <div className={styles.bookLayout}>
                         {books.map((bookRow) => {
                             return (

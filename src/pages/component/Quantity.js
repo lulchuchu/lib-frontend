@@ -4,7 +4,11 @@ export default function Quantity({quan, change, style}) {
     return <div className={styles.quantity} style={style}>
         <button
             className={styles.quantityButton}
-            onClick={() => change(quan - 1)}
+            onClick={() => {
+                if (quan > 1) {
+                    change(quan - 1);
+                }
+            }}
         >
             -
         </button>

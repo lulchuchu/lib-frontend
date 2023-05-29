@@ -6,9 +6,10 @@ import StarRatings from "react-star-ratings";
 import {confirmAlert} from "react-confirm-alert";
 import {useRouter} from "next/router";
 
-export default function BookReview({token, book, rating}) {
+export default function BookReview({token,bookId, reviews, avg, rating}) {
     const [review, setReview] = useState("");
     const router = useRouter();
+    // const [avgRating, setAvgRating] = useState(0);
 
     async function handleSendReview() {
         if(!token) {
@@ -31,7 +32,7 @@ export default function BookReview({token, book, rating}) {
         }
         else{
             const data = {
-                content: review, bookId: book.id, score: rating,
+                content: review, bookId: bookId, score: rating,
             };
 
             const result = await axios.post("http://localhost:8080/api/review/add", data, {headers: {Authorization: "Bearer " + token.accessToken}});
@@ -75,12 +76,31 @@ export default function BookReview({token, book, rating}) {
                 </div>
             </div>)}
 
-            {book.reviews?.map((review) => (<div
+            <div className={styles.blockTitle}>Community reviews</div>
+            <div className={styles.communityReview}>
+                {/*<StarRatings rating = {avg} starDimension="16px" starSpacing="0px"/>*/}
+                <StarRatings
+                    rating={avg}
+                    starRatedColor="green"
+                    numberOfStars={5}
+                    starDimension="36px"
+                    // changeRating={true}
+                    // name="rating"
+                />
+                <div className={styles.avgRating}>
+                    {avg}
+                </div>
+                <div className={styles.numberOfReview}>
+                    {reviews.length} reviews
+                </div>
+            </div>
+
+            {reviews.map((review) => (<div
                     key={review.id}
                     className={styles.reviewItem}
                 >
                     <div className={styles.reviewUser}>
-                        {review.user.name}
+                        {review.userName}
                     </div>
                     <div className={styles.reviewScore}>
                         {" "}

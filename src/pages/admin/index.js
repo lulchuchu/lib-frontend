@@ -17,24 +17,29 @@ export default function AdminHome() {
     }, []);
 
     useEffect(() => {
-        if (token) {
+        // if (token) {
             const fetch = async () => {
-                const result = await axios.get("http://localhost:8080/api/book/allbooks", {
-                    headers: {
-                        Authorization: `Bearer ${token.accessToken}`,
-                    },
-                });
+                const result = await axios.get("http://localhost:8080/api/book/allbooks",
+                    // {
+                    // headers: {
+                    //     Authorization: `Bearer ${token.accessToken}`,
+                    // },
+                // }
+                );
                 console.log("books", result.data);
                 setBooks(result.data);
             };
             fetch();
-        }
-    }, [token])
+        // }
+    }, [])
 
     console.log("token in admin", token)
 
     function handleViewClick(bookId) {
         router.push("/admin/book/"+bookId);
+    }
+    function handleAddButton() {
+        router.push("/admin/book/0");
     }
 
     async function handleDeleteClick(bookId) {
@@ -59,8 +64,12 @@ export default function AdminHome() {
         });
     }
 
+
+
     return (<>
         <Heading isAdmin={true}/>
+        {token && <button className={styles.button} onClick={handleAddButton}>Add</button>}
+
         <div className={styles.layout}>
             <link
                 href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css"
@@ -84,14 +93,15 @@ export default function AdminHome() {
                 {books.map((book) => <tr>
                     <td>{book.title}</td>
                     <td>{book.authorName}</td>
-                    <td>{book.categories.map((cat) => <p>{cat}</p>)}</td>
+                    <td>{book.categories.map((cat) => <p>{cat.name}</p>)}</td>
                     <td>{book.releaseDate}</td>
                     <td>{book.pages}</td>
                     <td>{book.sold}</td>
-                    <td>
-                        <button className={styles.button} onClick={() => handleViewClick(book.id)}>View</button>
-                        <button className={styles.button} onClick={() => handleDeleteClick(book.id)}>Delete</button>
-                    </td>
+                    {token &&
+                        <td>
+                            <button className={styles.button} onClick={() => handleViewClick(book.id)}>View</button>
+                            <button className={styles.button} onClick={() => handleDeleteClick(book.id)}>Delete</button>
+                        </td>}
                 </tr>)}
                 </tbody>
             </table>

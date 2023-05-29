@@ -7,7 +7,7 @@ import 'react-confirm-alert/src/react-confirm-alert.css';
 import {useRouter} from "next/router"; // Import css
 
 
-export default function BookCover({token, book, quantity, changeQuantity, rating, changeRating}) {
+export default function BookCover({token, book,yourRating, quantity, changeQuantity, rating, changeRating}) {
     const router = useRouter();
 
     const img_url = "http://localhost:8080/api/file/getImage?path=";
@@ -90,7 +90,7 @@ export default function BookCover({token, book, quantity, changeQuantity, rating
                 changeRating={(rating) => handleChangeRating(rating)}
                 numberOfStars={5}
                 starDimension="36px"
-                name="rating"
+                // name="rating"
             />
         </div>
     </div>);

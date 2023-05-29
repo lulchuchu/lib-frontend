@@ -13,7 +13,6 @@ export default function CategoryBook() {
 
     return (
         <>
-            <Heading/>
             <Home categoryId={index} authorId={null} />
         </>
     )

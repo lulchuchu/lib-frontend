@@ -3,19 +3,37 @@ import {useRouter} from "next/router";
 import Heading from "@/pages/component/heading";
 import styles from '@/styles/admin.module.css'
 import axios from "axios";
-
+import Select from "react-select";
 
 export default function AdminBook() {
     const img_url = "http://localhost:8080/api/file/getImage?path=";
     const router = useRouter();
     const {index} = router.query;
 
-
     const [token, setToken] = useState("");
     const [book, setBook] = useState({});
     const [isView, setIsView] = useState(true)
     const [isEdit, setIsEdit] = useState(false);
     const [isAdd, setIsAdd] = useState(false);
+    const [categories, setCategories] = useState([])
+    const [myBookCategories, setMyBookCategories] = useState([]);
+    const [selectedCategories, setSelectedCategories] = useState([]);
+
+    const [files, setFiles] = useState(null);
+    const [imgSrc, setImgSrc] = useState(null);
+
+    const [data, setData] = useState({
+        title: "",
+        cover: "",
+        description: "",
+        releaseDate: "",
+        pages: "",
+        price: "",
+        authorName: "",
+        categories: []
+
+    });
+
 
     useEffect(() => {
         const token = JSON.parse(localStorage.getItem("token"));
@@ -23,7 +41,15 @@ export default function AdminBook() {
     }, []);
 
     useEffect(() => {
-        if (index !== undefined) {
+        const fetch = async () => {
+            const result = await axios.get("http://localhost:8080/api/category/all");
+            setCategories(result.data)
+        }
+        fetch();
+    }, [])
+
+    useEffect(() => {
+        if (index !== undefined && index != 0) {
             const fetchBook = async () => {
                 const result = await axios.get(
                     "http://localhost:8080/api/book/details",
@@ -32,18 +58,53 @@ export default function AdminBook() {
                     }
                 );
                 console.log("result", result.data);
+                setImgSrc(img_url + result.data.cover)
+                setData({...result.data, authorName: result.data.author.name})
                 setBook(result.data);
+                let lst = ''
+                result.data.categories.map((cate) => {
+                    lst = [...lst, cate.name]
+                })
+                console.log("lst" + lst)
+                setMyBookCategories(lst);
+
             };
             fetchBook();
         }
+        if (index == 0) {
+            setIsAdd(true);
+            setIsView(false);
+        }
     }, [index]);
 
-    function handleUpload() {
+    function handleUpload(e) {
+        const file = e.target.files[0];
+        let formData = new FormData();
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            console.log("imgsrc", event.target.result)
+            setImgSrc(event.target.result);
+        };
+        reader.readAsDataURL(file)
+        formData.append("files", file);
+        setFiles(formData);
 
+        setData({...data, cover: file.name})
+        console.log(file.name);
     }
 
-    function handleAdd() {
+    async function handleAdd() {
 
+        const uploadImg = axios.post("http://localhost:8080/api/file/upload", files,
+            {headers: {Authorization: `Bearer ${token.accessToken}`}})
+
+        const result = await axios.post("http://localhost:8080/api/book/add", data, {
+            headers: {
+                Authorization: `Bearer ${token.accessToken}`,
+            }
+        });
+        console.log("result", result.data);
+        router.push("/admin");
     }
 
     function handleEdit() {
@@ -51,65 +112,110 @@ export default function AdminBook() {
         setIsView(false);
     }
 
-    function handleSave() {
+    async function handleSave() {
         setIsView(true);
         setIsEdit(false);
+
+        const uploadImg = axios.post("http://localhost:8080/api/file/upload", files,
+            {headers: {Authorization: `Bearer ${token.accessToken}`}})
+
+        const result = await axios.post("http://localhost:8080/api/book/update", data, {
+            headers: {
+                Authorization: `Bearer ${token.accessToken}`,
+            }
+        });
+        console.log("result", result.data);
         router.reload()
     }
 
+    function handleChangeCategory(e) {
+        let arr = Array.isArray(e) ? e.map(x => x.value) : []
+        setData({...data, categories: arr})
+        setSelectedCategories(arr);
+
+    }
+
+    // console.log("selectedCategories", selectedCategories)
+    console.log("book", data)
     return (
         <>
-            <Heading/>
+            <Heading isAdmin={true}/>
             <div className={styles.layout}>
                 <div className={styles.main}>
                     <div className={styles.info}>
                         <div className={styles.sub}>
                             <div className={styles.bookInfo}>
                                 <div>Title</div>
-                                <input type="text" className={styles.input} value={book.title} disabled={isView}/>
+                                <input type="text" className={styles.input} value={data.title} disabled={isView}
+                                       onChange={(e) => setData({...data, title: e.target.value})}/>
                             </div>
                             <div className={styles.bookInfo}>
                                 <div>Author</div>
-                                <input type="text" className={styles.input} value={book.author?.name} disabled={isView}/>
+                                <input type="text" className={styles.input} value={data.authorName} disabled={isView}
+                                       onChange={(e) => setData({...data, authorName: e.target.value})}/>
                             </div>
                         </div>
                         <div className={styles.description}>
                             <div>Description</div>
-                            <textarea className={styles.inputDescription} value={book.description} disabled={isView}/>
+                            <textarea className={styles.inputDescription} value={data.description} disabled={isView}
+                                      onChange={(e) => setData({...data, description: e.target.value})}/>
                         </div>
                         <div className={styles.sub}>
                             <div className={styles.bookInfo}>
                                 <div>Release date</div>
-                                <input type="date" className={styles.input} value={book.releaseDate} disabled={isView}/>
+                                <input type="date" className={styles.input} value={data.releaseDate} disabled={isView}
+                                       onChange={(e) => setData({...data, releaseDate: e.target.value})}/>
                             </div>
                             <div className={styles.bookInfo}>
                                 <div>Pages</div>
-                                <input type="text" className={styles.input} value={book.pages} disabled={isView}/>
+                                <input type="text" className={styles.input} value={data.pages} disabled={isView}
+                                       onChange={(e) => setData({...data, pages: e.target.value})}/>
                             </div>
                         </div>
                         <div className={styles.sub}>
                             <div className={styles.bookInfo}>
+                                <div>Category</div>
+                                {categories && <Select placeholder={myBookCategories.toString()}
+                                                       options={categories.map((cate) => ({
+                                                           value: cate,
+                                                           label: cate.name
+                                                       }))}
+                                                       onChange={handleChangeCategory}
+                                                       className={styles.input}
+                                                       isDisabled={isView}
+                                                       isClearable={true}
+                                                       isSearchable={true}
+                                                       isMulti={true}/>}
 
-                                {/*<input type="text" className={styles.input} value={book.category}/>*/}
                             </div>
                             <div className={styles.bookInfo}>
                                 <div>Price</div>
-                                <input type="text" className={styles.input} value={book.price} disabled={isView}/>
+                                <input type="text" className={styles.input} value={data.price} disabled={isView}
+                                       onChange={(e) => setData({...data, price: e.target.value})}/>
                             </div>
                         </div>
                         <div className={styles.sub}>
                             <div className={styles.bookInfo}>
                                 <div>Quantity</div>
-                                <input type="text" className={styles.input} value={book.quantity} disabled={isView}/>
+                                <input type="text" className={styles.input} value={data.quantity} disabled={isView}
+                                       onChange={(e) => setData({...data, quantity: e.target.value})}/>
                             </div>
                         </div>
                     </div>
-                    <div >
+                    <div className={styles.bookCover}>
                         <div>
-                            <button className={styles.button} onClick={handleUpload}>Upload</button>
-
+                            <input
+                                type="file"
+                                onChange={handleUpload}
+                                id="actual-btn"
+                                disabled={isView}
+                                hidden></input>
+                            <button className={styles.button} disabled={isView}>
+                                <label htmlFor="actual-btn" >Upload</label>
+                                {/*<button className={styles.button} onClick={handleUpload}>Upload</button>*/}
+                            </button>
                         </div>
-                        <img src={img_url + book.cover} className={styles.bookCover} alt="book cover"/>
+                        <img src={imgSrc} className={styles.bookCover} alt="book cover"/>
                     </div>
                 </div>
             </div>

@@ -15,12 +15,16 @@
 .addToCartButton {
     padding: 10px 0px;
     width: 240px;
-    background-color: darkgreen;
     border-radius: 24px;
-    color: white;
     text-align: center;
     font-size: 20px;
     margin-bottom: 5px;
+    border: 1px solid #ccc;
+}
+
+.addToCartButton:hover {
+    background-color: #ccc;
+    color: black;
 }
 
 .bookDetail {
@@ -102,6 +106,19 @@
     font-size: 16px;
     cursor: text;
 }
+
+.communityReview{
+    display: flex;
+    align-items: center;
+}
+
+.avgRating{
+    font-size: 32px;
+    margin: 0 10px 0 10px;
+    text-align: center;
+}
+
+
 
 .sendButton{
     width:60px;

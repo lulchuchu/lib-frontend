@@ -20,8 +20,8 @@ export default function Book() {
     const [book, setBook] = useState({});
     const [quantity, setQuantity] = useState(1);
     const [rating, setRating] = useState(0);
-
-
+    const [reviews, setReviews] = useState([]);
+    const [avgRating, setAvgRating] = useState(0);
     const router = useRouter();
     const { index } = router.query;
 
@@ -48,11 +48,47 @@ export default function Book() {
         }
     }, [index]);
 
+    useEffect(() => {
+        if(index){
+            const fetchReview = async() => {
+                const result = await axios.get(
+                    "http://localhost:8080/api/review/book",
+                    {params: {bookId: index}});
+
+                setReviews(result.data);
+
+                let total = 0;
+                for (const review of result.data) {
+                    console.log("review", review)
+                    total += review.score;
+                }
+                const rs = total === 0 ? 0 : Number((total / result.data.length).toFixed(2));
+                setAvgRating(rs);
+            }
+            fetchReview();
+        }
+    }, [index])
+
+    useEffect(() => {
+        if (reviews !== []) {
+            let rs = 0;
+            for(const review of reviews) {
+                if (review.userId === token.id) {
+                    rs = review.score;
+                    break;
+                }
+            }
+            setRating(rs);
+        }
+    }, [reviews])
+
+    console.log("avgRating", avgRating)
+
     return (
         <>
             <Heading />
                 <div className={styles.bookDetailLayout}>
-                    <BookCover token = {token} book={book}  quantity={quantity} changeQuantity = {setQuantity} rating={rating} changeRating={setRating}/>
+                    <BookCover token = {token} book={book} quantity={quantity} changeQuantity = {setQuantity}  rating={rating} changeRating={setRating}/>
 
                     <div className={styles.bookDetail}>
                         <div className={styles.title}>{book.title}</div>
@@ -60,8 +96,8 @@ export default function Book() {
                         <div className={styles.price}>{book.price * quantity}$</div>
                         <BookDescription book={book}/>
                         <BookAuthor book={book} imgUrl={img_url}/>
-                        <BookReview token={token} book={book} rating={rating}/>
-                        <BookSimilar book = {book} />
+                        <BookReview token={token} bookId = {book.id} reviews={reviews} avg = {avgRating} rating={rating}/>
+                        {/*<BookSimilar book = {book} />*/}
                     </div>
                 </div>
             )

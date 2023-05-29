@@ -26,20 +26,25 @@ export default function Heading({isAdmin}) {
 
     function handleLogout() {
         localStorage.removeItem("token");
-        router.push("/login");
+        if(!isAdmin){
+            router.push("/login");
+        }
+        else {
+            router.push("/admin/login");
+        }
     }
 
     return (
         <>
             <div className={styles.heading}>
-                <Link href="/">
+                <Link href={isAdmin?"/admin":"/"}>
                     <img
                         src="House_Targaryen.png"
                         alt=""
                         className={styles.homeIcon}
                     />
                 </Link>
-                <div className={styles.searchBar}>
+                {!isAdmin && <div className={styles.searchBar}>
                     <input
                         type="text"
                         className={styles.input}
@@ -48,22 +53,21 @@ export default function Heading({isAdmin}) {
                     <button
                         className={styles.searchButton}
                         onClick={
-                        () => {
-                            console.log("searchText: " + searchText)
-
-                            router.push("/search?keyword=" + searchText)
-                        }}
+                            () => {
+                                console.log("searchText: " + searchText)
+                                router.push("/search?keyword=" + searchText)
+                            }}
 
                     >
                         {/*<Link href={{pathname: `/search`, query: {keyword: searchText}}}>*/}
-                            <AiOutlineSearch
-                                size={20}
-                                className={styles.searchIcon}
-                            />
+                        <AiOutlineSearch
+                            size={20}
+                            className={styles.searchIcon}
+                        />
                         {/*</Link>*/}
 
                     </button>
-                </div>
+                </div>}
                 <div className={styles.right}>
                     {!isAdmin && token && <div className={styles.icon}>
                         <Link href={"/cart/"} className={styles.icon}>
@@ -81,12 +85,12 @@ export default function Heading({isAdmin}) {
                             {token.name}
                             {optionUserShowing && (
                                 <div className={styles.optionUser}>
-                                    <Link
+                                    {!isAdmin&&<Link
                                         href={"/bought"}
                                         className={styles.option}
                                     >
                                         <div> My Bought</div>
-                                    </Link>
+                                    </Link>}
                                     <div
                                         className={styles.option}
                                         onClick={handleLogout}
@@ -97,7 +101,7 @@ export default function Heading({isAdmin}) {
                             )}
                         </div>
                     ) : (
-                        <Link href="/login">
+                        <Link href={isAdmin?"/admin/login":"/login"}>
                             <div className={styles.icon}>
                                 <AiOutlineLogin size={40} />
                             </div>

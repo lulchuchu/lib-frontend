@@ -31,7 +31,7 @@ export default function MyBought(){
     }, [token])
 
     async function handleDelete(billId) {
-        const result = await axios.post("http://localhost:8080/api/bill/removefromcart",{}, {
+        const result = await axios.post("http://localhost:8080/api/bill/cancelPay",{}, {
             headers: {Authorization: "Bearer " + token.accessToken},
             params: {billId: billId}
         })

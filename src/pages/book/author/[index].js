@@ -13,7 +13,6 @@ export default function AuthorBook() {
 
     return (
         <>
-            <Heading/>
             {index && <Home categoryId={null} authorId={index} />}
         </>
     )
