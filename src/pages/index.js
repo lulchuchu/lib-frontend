@@ -7,20 +7,21 @@ import { useRouter } from "next/router";
 import DisplayBook from "@/pages/component/DisplayBook";
 import Heading from "@/pages/component/heading";
 export default function Home({ categoryId, authorId, keyword }) {
-    const [token, setToken] = useState(null);
     const [books, setBooks] = useState([]);
-    const [sold, setSold] = useState(false);
 
+    const [filter, setFilter] = useState({
+        sort: null,
+        categoryId: categoryId? categoryId : null,
+        authorId: authorId?authorId : null,
+        keyword: keyword?keyword : null,
+    });
+
+    console.log("filter", filter);
 
     const router = useRouter();
 
     console.log("categoryId", categoryId);
     console.log("authorId", authorId);
-
-    useEffect(() => {
-        const token = JSON.parse(localStorage.getItem("token"));
-        setToken(token);
-    }, []);
 
     function handleRow(result){
         let tmp = [];
@@ -41,70 +42,47 @@ export default function Home({ categoryId, authorId, keyword }) {
     }
 
     useEffect(() => {
-        const fetchBook = async () => {
-            let result;
-            if (categoryId == null && authorId == null && keyword == null) {
-                result = await axios.get("http://localhost:8080/api/book/all");
-            }
-            else if (categoryId != null) {
-                result = await axios.get(
-                    "http://localhost:8080/api/book/category",
-                    {
-                        params: { categoryId: categoryId },
-                    }
-                );
-
-                console.log("category", result);
-            }
-            else if (authorId != null) {
-                result = await axios.get(
-                    "http://localhost:8080/api/book/author",
-                    {
-                        params: { authorId: authorId },
-                    }
-                );
-                console.log("author", result);
-            }
-            else if (keyword != null) {
-                result = await axios.get(
-                    "http://localhost:8080/api/book/search",
-                    {
-                        params: { keyword: keyword },
-                    }
-                );
-                console.log("keyword", result);
-            }
+        const fetch = async () => {
+            const data = {...filter};
+            data.sort==null && delete data.sort;
+            data.authorId==null && delete data.authorId;
+            data.categoryId==null && delete data.categoryId;
+            data.keyword==null && delete data.keyword;
+            console.log("filter", data)
+            const result = await axios.get("http://localhost:8080/api/book/all", {params: filter});
             handleRow(result);
-        };
-        fetchBook();
-    }, [categoryId, authorId, keyword]);
-
-    console.log("books", books);
+        }
+        fetch();
+    }, [filter]);
 
     async function handleBestSellerClick() {
-        const result = await axios.get("http://localhost:8080/api/book/all/bestseller");
-        handleRow(result)
+        // const result = await axios.get("http://localhost:8080/api/book/all/bestseller");
+        // handleRow(result)
+        setFilter({...filter, sort: "bestseller"})
     }
 
     async function handleNewReleaseCLick() {
-        const result = await axios.get("http://localhost:8080/api/book/all/new");
-        handleRow(result)
+        // const result = await axios.get("http://localhost:8080/api/book/all/new");
+        // handleRow(result)
+        setFilter({...filter, sort: "new"})
 
     }
 
     async function handleIncPriceClick() {
-        const result = await axios.get("http://localhost:8080/api/book/all/priceIncrease");
-        handleRow(result);
+        // const result = await axios.get("http://localhost:8080/api/book/all/priceIncrease");
+        // handleRow(result);
+        setFilter({...filter, sort: "priceIncrease"})
     }
 
     async function handleDecPriceClick() {
-        const result = await axios.get("http://localhost:8080/api/book/all/priceDecrease");
-        handleRow(result);
+        // const result = await axios.get("http://localhost:8080/api/book/all/priceDecrease");
+        // handleRow(result);
+        setFilter({...filter, sort: "priceDecrease"})
     }
 
     return (
         <>
-            <Heading />
+            <Heading filter={filter} setFilter={setFilter}/>
             <div className={styles.layout}>
                 <div className={styles.main}>
                     <div className={styles.filterBar}>

@@ -36,12 +36,25 @@ export default function BookCover({token, book,yourRating, quantity, changeQuant
                 "quantity": quantity,
                 "bookId": book.id
             }
-
-            const result = await axios.post("http://localhost:8080/api/bill/addtocart", data, {
-                headers: {Authorization: "Bearer " + token.accessToken}
-            });
-
-            console.log("Add to cart: ", result.data)
+            try{
+                const result = await axios.post("http://localhost:8080/api/bill/addtocart", data, {
+                    headers: {Authorization: "Bearer " + token.accessToken}
+                });
+                console.log("Add to cart: ", result.data)
+            }catch (e){
+                confirmAlert({
+                    title: "Add to cart failed",
+                    message: e.response.data.message,
+                    buttons: [
+                        {
+                            label: 'Ok',
+                            onClick:() => {}
+                        },
+                    ],
+                    closeOnEscape: true,
+                    closeOnClickOutside: true,
+                })
+            }
         }
 
     }

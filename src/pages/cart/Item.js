@@ -3,16 +3,32 @@ import styles from "@/styles/cart.module.css";
 import Quantity from "@/pages/component/Quantity";
 import {useRouter} from "next/router";
 import axios from "axios";
+import {confirmAlert} from "react-confirm-alert";
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 export default function Item({token, bill}) {
     const [quantity, setQuantity] = useState(bill.quantity);
     const router = useRouter();
 
     async function handleCheckout() {
-
-        const result = await axios.post("http://localhost:8080/api/bill/pay?billId=" + bill.id,{}, {headers: {Authorization: "Bearer " + token.accessToken}})
-        console.log("result", result.data)
-        router.reload();
+        try{
+            const result = await axios.post("http://localhost:8080/api/bill/pay?billId=" + bill.id,{}, {headers: {Authorization: "Bearer " + token.accessToken}})
+            console.log("result", result.data)
+            router.reload();
+        }catch (e){
+            confirmAlert({
+                title: "Checkout failed",
+                message: e.response.data.message,
+                buttons: [
+                    {
+                        label: 'Ok',
+                        onClick: async () => {}
+                    },
+                ],
+                closeOnEscape: true,
+                closeOnClickOutside: true,
+            })
+        }
     }
 
     async function handleDelete() {

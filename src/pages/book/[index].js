@@ -1,9 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { AiOutlineShoppingCart } from "react-icons/ai";
-import StarRatings from "react-star-ratings";
-import Link from "next/link";
 import styles from "@/styles/book.module.css";
 import BookCover from "@/pages/book/BookCover";
 import BookDescription from "@/pages/book/BookDescription";
@@ -11,9 +8,6 @@ import BookAuthor from "@/pages/book/BookAuthor";
 import BookReview from "@/pages/book/BookReview";
 import BookSimilar from "@/pages/book/BookSimilar";
 import Heading from "@/pages/component/heading";
-
-
-
 
 export default function Book() {
     const [token, setToken] = useState(null);
@@ -70,7 +64,7 @@ export default function Book() {
     }, [index])
 
     useEffect(() => {
-        if (reviews !== []) {
+        if (token && reviews !== []) {
             let rs = 0;
             for(const review of reviews) {
                 if (review.userId === token.id) {
@@ -80,7 +74,7 @@ export default function Book() {
             }
             setRating(rs);
         }
-    }, [reviews])
+    }, [token,reviews])
 
     console.log("avgRating", avgRating)
 
@@ -88,16 +82,18 @@ export default function Book() {
         <>
             <Heading />
                 <div className={styles.bookDetailLayout}>
-                    <BookCover token = {token} book={book} quantity={quantity} changeQuantity = {setQuantity}  rating={rating} changeRating={setRating}/>
+                    <div className={styles.main}>
+                        <BookCover token = {token} book={book} quantity={quantity} changeQuantity = {setQuantity}  rating={rating} changeRating={setRating}/>
 
-                    <div className={styles.bookDetail}>
-                        <div className={styles.title}>{book.title}</div>
-                        <div className={styles.author}>{book.author?.name}</div>
-                        <div className={styles.price}>{book.price * quantity}$</div>
-                        <BookDescription book={book}/>
-                        <BookAuthor book={book} imgUrl={img_url}/>
-                        <BookReview token={token} bookId = {book.id} reviews={reviews} avg = {avgRating} rating={rating}/>
-                        {/*<BookSimilar book = {book} />*/}
+                        <div className={styles.bookDetail}>
+                            <div className={styles.title}>{book.title}</div>
+                            <div className={styles.author}>{book.author?.name}</div>
+                            <div className={styles.price}>{book.price * quantity}$</div>
+                            <BookDescription book={book}/>
+                            <BookAuthor book={book} imgUrl={img_url}/>
+                            <BookReview token={token} bookId = {book.id} reviews={reviews} avg = {avgRating} rating={rating}/>
+                        </div>
+
                     </div>
                 </div>
             )

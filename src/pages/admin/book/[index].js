@@ -4,6 +4,8 @@ import Heading from "@/pages/component/heading";
 import styles from '@/styles/admin.module.css'
 import axios from "axios";
 import Select from "react-select";
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 export default function AdminBook() {
     const img_url = "http://localhost:8080/api/file/getImage?path=";
@@ -93,9 +95,10 @@ export default function AdminBook() {
         console.log(file.name);
     }
 
-    async function handleAdd() {
+    console.log("files", files);
 
-        const uploadImg = axios.post("http://localhost:8080/api/file/upload", files,
+    async function handleAdd() {
+        const uploadImg = await axios.post("http://localhost:8080/api/file/upload", files,
             {headers: {Authorization: `Bearer ${token.accessToken}`}})
 
         const result = await axios.post("http://localhost:8080/api/book/add", data, {
@@ -116,8 +119,12 @@ export default function AdminBook() {
         setIsView(true);
         setIsEdit(false);
 
-        const uploadImg = axios.post("http://localhost:8080/api/file/upload", files,
-            {headers: {Authorization: `Bearer ${token.accessToken}`}})
+        try{
+            const uploadImg = await axios.post("http://localhost:8080/api/file/upload", files,
+                {headers: {Authorization: `Bearer ${token.accessToken}`}})
+        }catch (e){
+            console.log("no img")
+        }
 
         const result = await axios.post("http://localhost:8080/api/book/update", data, {
             headers: {
@@ -220,9 +227,41 @@ export default function AdminBook() {
                 </div>
             </div>
             <div className={styles.buttonLst}>
-                {isAdd && <button className={styles.button} onClick={handleAdd}>Add</button>}
+                {isAdd && <button className={styles.button} onClick={() =>
+                    confirmAlert({
+                        title: "Add new book",
+                        message: "Are you sure to add new book?",
+                        buttons: [
+                            {
+                                label: 'Confirm',
+                                onClick: handleAdd
+                            },
+                            {
+                                label: 'Cancel'
+                            }
+                        ],
+                        closeOnEscape: true,
+                        closeOnClickOutside: true,
+                    })
+                }>Add</button>}
                 {isView && <button className={styles.button} onClick={handleEdit}>Edit</button>}
-                {isEdit && <button className={styles.button} onClick={handleSave}>Save</button>}
+                {isEdit && <button className={styles.button} onClick={() =>
+                    confirmAlert({
+                        title: "Update book",
+                        message: "Are you sure to update this book?",
+                        buttons: [
+                            {
+                                label: 'Confirm',
+                                onClick: handleSave
+                            },
+                            {
+                                label: 'Cancel'
+                            }
+                        ],
+                        closeOnEscape: true,
+                        closeOnClickOutside: true,
+                    })
+                }>Save</button>}
             </div>
         </>
     )

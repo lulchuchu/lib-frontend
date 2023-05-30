@@ -11,13 +11,13 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 
-export default function Heading({isAdmin}) {
+export default function Heading({isAdmin, filter, setFilter}) {
     const router = useRouter();
     const [token, setToken] = useState(null);
     const [optionUserShowing, setOptionUserShowing] = useState(false);
     const [cartShowing, setCartShowing] = useState(false);
     const [bookInCart, setBookInCart] = useState([]);
-    const [searchText, setSearchText] = useState("");
+    const [searchText, setSearchText] = useState(filter?.keyword);
 
     useEffect(() => {
         setToken(JSON.parse(localStorage.getItem("token")));
@@ -39,12 +39,12 @@ export default function Heading({isAdmin}) {
             <div className={styles.heading}>
                 <Link href={isAdmin?"/admin":"/"}>
                     <img
-                        src="House_Targaryen.png"
+                        src="/pics/House_Targaryen.png"
                         alt=""
                         className={styles.homeIcon}
                     />
                 </Link>
-                {!isAdmin && <div className={styles.searchBar}>
+                {!isAdmin && <div className={styles.searschBar}>
                     <input
                         type="text"
                         className={styles.input}
@@ -54,8 +54,9 @@ export default function Heading({isAdmin}) {
                         className={styles.searchButton}
                         onClick={
                             () => {
-                                console.log("searchText: " + searchText)
-                                router.push("/search?keyword=" + searchText)
+                                // console.log("searchText: " + searchText)
+                                // router.push("/search?keyword=" + searchText)
+                                setFilter({...filter, keyword: searchText})
                             }}
 
                     >
