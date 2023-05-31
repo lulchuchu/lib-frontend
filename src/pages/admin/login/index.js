@@ -43,9 +43,8 @@ export default function AdminLogin(){
                 buttons: [
                     {
                         label: 'Try again',
-                        onClick: () => {
-                            router.reload()}
-                    },
+                        onClick: () => {}
+                    }
                 ],
                 closeOnEscape: true,
                 closeOnClickOutside: true,

@@ -97,7 +97,7 @@ export default function AdminHome() {
                     <td>{book.releaseDate}</td>
                     <td>{book.pages}</td>
                     <td>{book.sold}</td>
-                    {token &&
+                    {token && token.role === "ADMIN" &&
                         <td>
                             <button className={styles.button} onClick={() => handleViewClick(book.id)}>View</button>
                             <button className={styles.button} onClick={() => handleDeleteClick(book.id)}>Delete</button>

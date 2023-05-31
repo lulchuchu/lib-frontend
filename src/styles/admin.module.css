@@ -59,3 +59,13 @@
     transform: translate(-50%, 0);
     width: 1070px;
 }
+
+.label{
+    display: flex;
+}
+
+.error{
+    color: red;
+    font-size: 12px;
+    margin-left: 10px;
+}

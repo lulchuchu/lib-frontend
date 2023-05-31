@@ -42,8 +42,7 @@ export default function BookReview({token,bookId, reviews, avg, rating}) {
                  buttons: [
                      {
                          label: 'Ok',
-                         onClick: () => {
-                         router.reload()}
+                         onClick: () => {}
                      },
                  ],
                 closeOnEscape: true,

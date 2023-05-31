@@ -47,7 +47,7 @@
 .optionUser{
     position: absolute;
     width:120px;
-    margin-top:10px;
+    /*margin-top:10px;*/
     right:20px;
     border-radius: 12px;
     background-color: white;

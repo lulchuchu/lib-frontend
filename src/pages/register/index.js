@@ -36,8 +36,7 @@ export default function register(){
     async function sendInput(){
         if(data.name.length === 0 || data.username.length === 0 || data.password.length === 0 || data.email.length === 0 || data.phoneNumber.length === 0 || data.address.length === 0){
             if(data.name.length === 0){
-
-            setNameError("Name must not be empty");
+                setNameError("Name must not be empty");
             }
 
             if(data.username.length === 0){
@@ -57,7 +56,7 @@ export default function register(){
                 // return;
             }
             if(data.address.length < 6){
-                setAddressError("Address must be at least 6 characters");
+                setAddressError("Address must not be empty");
                 // return;
             }
             return;
@@ -74,9 +73,7 @@ export default function register(){
                 buttons: [
                     {
                         label: 'Try again',
-                        onClick: () => {
-                            router.reload()}
-                    },
+                        onClick: () => {}}
                 ],
                 closeOnEscape: true,
                 closeOnClickOutside: true,

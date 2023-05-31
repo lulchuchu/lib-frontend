@@ -7,11 +7,21 @@ import {confirmAlert} from "react-confirm-alert";
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 export default function Item({token, bill}) {
+
     const [quantity, setQuantity] = useState(bill.quantity);
     const router = useRouter();
 
+    async function handleQuantityChange() {
+        const result = await axios.post("http://localhost:8080/api/bill/changeQuantity", {}, {
+            headers: {Authorization: "Bearer " + token.accessToken},
+            params: {billId: bill.id, quantity: quantity}
+        })
+        console.log("result", result.data)
+    }
+
     async function handleCheckout() {
         try{
+            const changeQuantity = await handleQuantityChange();
             const result = await axios.post("http://localhost:8080/api/bill/pay?billId=" + bill.id,{}, {headers: {Authorization: "Bearer " + token.accessToken}})
             console.log("result", result.data)
             router.reload();
@@ -41,6 +51,10 @@ export default function Item({token, bill}) {
         router.reload();
 
     }
+
+
+
+    console.log("quantity", quantity)
 
     return (
 

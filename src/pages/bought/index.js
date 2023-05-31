@@ -5,6 +5,8 @@ import Quantity from "@/pages/component/Quantity";
 import axios from "axios";
 import {useRouter} from "next/router";
 import Heading from "@/pages/component/heading";
+import {confirmAlert} from "react-confirm-alert";
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 
 export default function MyBought(){
@@ -75,7 +77,25 @@ export default function MyBought(){
                     <td>{bill.quantity}</td>
                     <td>{bill.total} $</td>
                     <td>
-                        <button className={styles.button} onClick={() => handleDelete(bill.id)}>Cancel</button>
+                        <button className={styles.button} onClick={() => {
+                            confirmAlert({
+                                title: "Delete book bought",
+                                message: "Are you sure to cancel buy this book?",
+                                buttons: [
+                                    {
+                                        label: 'Confirm',
+                                        onClick: async () => {
+                                            await handleDelete(bill.id);
+                                        }
+                                    },
+                                    {
+                                        label: 'Cancel'
+                                    }
+                                ],
+                                closeOnEscape: true,
+                                closeOnClickOutside: true,
+                            })
+                        }}>Cancel</button>
                     </td>
                 </tr>
             )}

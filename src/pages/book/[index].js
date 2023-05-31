@@ -84,11 +84,11 @@ export default function Book() {
                 <div className={styles.bookDetailLayout}>
                     <div className={styles.main}>
                         <BookCover token = {token} book={book} quantity={quantity} changeQuantity = {setQuantity}  rating={rating} changeRating={setRating}/>
-
                         <div className={styles.bookDetail}>
                             <div className={styles.title}>{book.title}</div>
                             <div className={styles.author}>{book.author?.name}</div>
                             <div className={styles.price}>{book.price * quantity}$</div>
+                            <div>{book.quantity} left in stock</div>
                             <BookDescription book={book}/>
                             <BookAuthor book={book} imgUrl={img_url}/>
                             <BookReview token={token} bookId = {book.id} reviews={reviews} avg = {avgRating} rating={rating}/>
